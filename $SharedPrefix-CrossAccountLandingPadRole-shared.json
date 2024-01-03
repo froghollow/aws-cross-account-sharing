@@ -1,0 +1,73 @@
+{
+  "RoleName": "$SharedPrefix-CrossAccountLandingPadRole",
+  "RoleArn": "arn:$Partition:iam::$SharedAcct:role/$SharedPrefix-CrossAccountLandingPadRole",
+  "RoleDescription": "Role Assumed by Trusted Account to Access Resources in this Shared Account",
+  "RoleTrustPolicyDoc": {
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": [
+                  "arn:aws:iam::$TrustedAcct:root",
+                  "arn:aws:iam:::$TrustedAcct:role/$TrustedPrefix-CrossAccountLandingPadRole"
+                ]
+            },
+            "Action": "sts:AssumeRole",
+            "Condition": {}
+        }
+    ]
+  },
+  "AttachedPolicies": [
+    {
+      "PolicyName": "$SharedPrefix-CrossAccountLandingPad-policy",
+      "PolicyArn": "arn:$Partition:iam::$SharedAcct:policy/$SharedPrefix-CrossAccountLandingPad-policy",
+      "Description": "Policy to grant KMS and S3 permissions to a Trusted Account",
+      "PolicyDoc": {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Sid": "KMSEncryptionPermission",
+            "Effect": "Allow",
+            "Action": [
+              "kms:Encrypt",
+              "kms:Decrypt",
+              "kms:ReEncrypt*",
+              "kms:GenerateDataKey",
+              "kms:DescribeKey"
+            ],
+            "Resource": "arn:$Partition:kms:$SharedRegion:$SharedAcct:key/$SharedPrefix-kms-s3"
+          },
+          {
+            "Sid": "S3Permission",
+            "Effect": "Allow",
+            "Action": [
+              "s3:PutObjectAcl",
+              "s3:PutObject",
+              "s3:ListBucket",
+              "s3:GetObject",
+              "s3:DeleteObject"
+            ],
+            "Resource": [
+              "arn:$Partition:s3:::$SharedBucket",
+              "arn:$Partition:s3:::$SharedBucket/$SharedFolder/*"
+            ]
+          },
+          {
+            "Sid": "S3ReadOnly",
+            "Effect": "Allow",
+            "Action": [
+              "s3:ListBucket",
+              "s3:GetObject"
+            ],
+            "Resource": [
+              "arn:$Partition:s3:::$SharedBucket",
+              "arn:$Partition:s3:::$SharedBucket/$SharedFolder/*"
+            ]
+          }          
+        ]
+      }
+    }
+  ],
+  "InlinePolicies": []
+}

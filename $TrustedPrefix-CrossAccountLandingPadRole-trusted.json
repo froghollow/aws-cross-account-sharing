@@ -1,0 +1,68 @@
+{
+  "RoleName": "$TrustedPrefix-CrossAccountLandingPadRole",
+  "RoleArn": "arn:$Partition:iam::$TrustedAcct:role/$TrustedPrefix-CrossAccountLandingPadRole",
+  "RoleTrustPolicyDoc": {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Principal": {
+          "Service": "lambda.amazonaws.com"
+        },
+        "Action": "sts:AssumeRole"
+      }
+    ]
+  },
+  "AttachedPolicies": [
+    {
+      "PolicyName": "AWSLambdaBasicExecutionRole",
+      "PolicyArn": "arn:$Partition:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+      "Description": "Provides write permissions to CloudWatch Logs.",
+      "PolicyDoc": {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Action": [
+              "logs:CreateLogGroup",
+              "logs:CreateLogStream",
+              "logs:PutLogEvents"
+            ],
+            "Resource": "*"
+          }
+        ]
+      }
+    },
+    {
+      "PolicyName": "AmazonS3FullAccess",
+      "PolicyArn": "arn:$Partition:iam::aws:policy/AmazonS3FullAccess",
+      "Description": "Provides full access to all buckets via the AWS Management Console.",
+      "PolicyDoc": {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Action": [
+              "s3:*",
+              "s3-object-lambda:*"
+            ],
+            "Resource": "*"
+          }
+        ]
+      }
+    }
+  ],
+  "InlinePolicies": [
+    {
+      "PolicyName": "daab-assume-role",
+      "PolicyDoc": {
+        "Version": "2012-10-17",
+        "Statement": {
+          "Effect": "Allow",
+          "Action": "sts:AssumeRole",
+          "Resource": "arn:$Partition:iam::$SharedAcct:role/$SharedPrefix-CrossAccountLandingPadRole"
+        }
+      }
+    }
+  ]
+}

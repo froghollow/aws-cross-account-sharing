@@ -1,0 +1,62 @@
+{
+  "RoleName": "daab-lab-CrossAccountLandingPadRole",
+  "RoleArn": "arn:aws:iam::442483223120:role/daab-lab-CrossAccountLandingPadRole",
+  "RoleDescription": "Role to permit Trusted account with access to Shared S3 landing pad folders",
+  "RoleTrustPolicyDoc": {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Principal": {
+          "AWS": [
+            "arn:aws:iam::289755104220:root",
+            "arn:aws:iam::289755104220:role/ram-lab-CrossAccountLandingPadRole",
+            "arn:aws:sts::289755104220:assumed-role/ram-lab-CrossAccountLandingPadRole/ram-lab-S3_Cross_Account_Example"
+          ]
+        },
+        "Action": "sts:AssumeRole"
+      }
+    ]
+  },
+  "AttachedPolicies": [
+    {
+      "PolicyName": "daab-lab-CrossAccountLandingPad-policy",
+      "PolicyArn": "arn:aws:iam::442483223120:policy/daab-lab-CrossAccountLandingPad-policy",
+      "Description": "Policy to grant KMS and S3 permissions to a Trusted Account",
+      "DefaultVersion": "v1",
+      "PolicyDoc": {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Sid": "KMSEncryptionPermission",
+            "Effect": "Allow",
+            "Action": [
+              "kms:Encrypt",
+              "kms:Decrypt",
+              "kms:ReEncrypt*",
+              "kms:GenerateDataKey",
+              "kms:DescribeKey"
+            ],
+            "Resource": "arn:aws:kms:us-east-2:442483223120:key/daab-lab-kms-s3"
+          },
+          {
+            "Sid": "S3Permission",
+            "Effect": "Allow",
+            "Action": [
+              "s3:PutObjectAcl",
+              "s3:PutObject",
+              "s3:ListBucket",
+              "s3:GetObject",
+              "s3:DeleteObject"
+            ],
+            "Resource": [
+              "arn:aws:s3:::daab-lab-smpl-main-landing-pad",
+              "arn:aws:s3:::daab-lab-smpl-main-landing-pad/TOP/*"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "InlinePolicies": []
+}

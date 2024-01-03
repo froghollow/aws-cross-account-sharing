@@ -1,0 +1,71 @@
+{
+  "RoleName": "ram-lab-CrossAccountLandingPadRole",
+  "RoleArn": "arn:aws:iam::289755104220:role/ram-lab-CrossAccountLandingPadRole",
+  "RoleDescription": "Role to enable access to central Landing Pad ",
+  "RoleTrustPolicyDoc": {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Principal": {
+          "Service": "lambda.amazonaws.com"
+        },
+        "Action": "sts:AssumeRole"
+      }
+    ]
+  },
+  "AttachedPolicies": [
+    {
+      "PolicyName": "AWSLambdaBasicExecutionRole",
+      "PolicyArn": "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+      "Description": "Provides write permissions to CloudWatch Logs.",
+      "DefaultVersion": "v1",
+      "PolicyDoc": {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Action": [
+              "logs:CreateLogGroup",
+              "logs:CreateLogStream",
+              "logs:PutLogEvents"
+            ],
+            "Resource": "*"
+          }
+        ]
+      }
+    },
+    {
+      "PolicyName": "AmazonS3FullAccess",
+      "PolicyArn": "arn:aws:iam::aws:policy/AmazonS3FullAccess",
+      "Description": "Provides full access to all buckets via the AWS Management Console.",
+      "DefaultVersion": "v2",
+      "PolicyDoc": {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Action": [
+              "s3:*",
+              "s3-object-lambda:*"
+            ],
+            "Resource": "*"
+          }
+        ]
+      }
+    }
+  ],
+  "InlinePolicies": [
+    {
+      "PolicyName": "daab-assume-role",
+      "PolicyDoc": {
+        "Version": "2012-10-17",
+        "Statement": {
+          "Effect": "Allow",
+          "Action": "sts:AssumeRole",
+          "Resource": "arn:aws:iam::442483223120:role/daab-lab-CrossAccountLandingPadRole"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "RoleName": "DAAB-LAB-RAM-CrossAccountLandingPadRole",
+  "RoleArn": "arn:aws:iam::442483223120:role/DAAB-LAB-RAM-CrossAccountLandingPadRole",
+  "RoleDescription": "Role Assumed by Trusted Account to Access Resources in this Shared Account",
+  "RoleTrustPolicyDoc": {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Principal": {
+          "AWS": [
+            "arn:aws:iam::289755104220:root",
+            "arn:aws:iam:::289755104220:role/RAM-LAB-DAAB-CrossAccountLandingPadRole"
+          ]
+        },
+        "Action": "sts:AssumeRole",
+        "Condition": {}
+      }
+    ]
+  },
+  "AttachedPolicies": [
+    {
+      "PolicyName": "DAAB-LAB-RAM-CrossAccountLandingPad-policy",
+      "PolicyArn": "arn:aws:iam::442483223120:policy/DAAB-LAB-RAM-CrossAccountLandingPad-policy",
+      "Description": "Policy to grant KMS and S3 permissions to a Trusted Account",
+      "PolicyDoc": {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Sid": "KMSEncryptionPermission",
+            "Effect": "Allow",
+            "Action": [
+              "kms:Encrypt",
+              "kms:Decrypt",
+              "kms:ReEncrypt*",
+              "kms:GenerateDataKey",
+              "kms:DescribeKey"
+            ],
+            "Resource": "arn:aws:kms:us-east-2:442483223120:key/DAAB-LAB-RAM-kms-s3"
+          },
+          {
+            "Sid": "S3Permission",
+            "Effect": "Allow",
+            "Action": [
+              "s3:PutObjectAcl",
+              "s3:PutObject",
+              "s3:ListBucket",
+              "s3:GetObject",
+              "s3:DeleteObject"
+            ],
+            "Resource": [
+              "arn:aws:s3:::daab-lab-smpl-main-landing-pad",
+              "arn:aws:s3:::daab-lab-smpl-main-landing-pad/TOP/*"
+            ]
+          },
+          {
+            "Sid": "S3ReadOnly",
+            "Effect": "Allow",
+            "Action": [
+              "s3:ListBucket",
+              "s3:GetObject"
+            ],
+            "Resource": [
+              "arn:aws:s3:::daab-lab-smpl-main-landing-pad",
+              "arn:aws:s3:::daab-lab-smpl-main-landing-pad/TOP/*"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "InlinePolicies": [],
+  "CrossAccountParms": {
+    "Partition": "aws",
+    "SharedRegion": "us-east-2",
+    "SharedAcct": "442483223120",
+    "SharedKeyId": "daab-lab-kms-s3",
+    "SharedBucket": "daab-lab-smpl-main-landing-pad",
+    "SharedFolder": "TOP",
+    "SharedPrefix": "DAAB-LAB-RAM",
+    "TrustedRegion": "us-east-2",
+    "TrustedAcct": "289755104220",
+    "TrustedPrefix": "RAM-LAB-DAAB"
+  },
+  "FromTemplate": "$SharedPrefix-CrossAccountLandingPadRole-shared.json"
+}
